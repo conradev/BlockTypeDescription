@@ -10,11 +10,6 @@
 
 #import <objc/runtime.h>
 
-// Define class locally because it is private. Hopefully this will not cause conflicts with other code.
-// If it does, I will have to revert to grabbing the class at runtime instead of linking to it.
-@interface NSBlock : NSObject
-@end
-
 static NSString * (*TDOriginalDescription)(id, SEL);
 
 static NSString *TDFormattedStringForComplexType(const char *encoding) {
@@ -129,6 +124,6 @@ static NSString * TDReplacedDescription(id self, SEL _cmd) {
 }
 
 static __attribute__((constructor)) void constructor() {
-    Method descriptionMethod = class_getInstanceMethod([NSBlock class], @selector(description));
+    Method descriptionMethod = class_getInstanceMethod(NSClassFromString(@"NSBlock"), @selector(description));
     TDOriginalDescription = (NSString * (*)(id, SEL))method_setImplementation(descriptionMethod, (IMP)&TDReplacedDescription);
 }
