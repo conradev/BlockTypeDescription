@@ -26,7 +26,7 @@ static NSString *TDFormattedStringForComplexType(const char *encoding) {
     } else {
         return nil;
     }
-    
+
     const char *namePtr = encoding + 1;
     unsigned length = 0;
     while (*namePtr && *namePtr != '=' && *namePtr != '}' && *namePtr != ')') {
@@ -34,13 +34,13 @@ static NSString *TDFormattedStringForComplexType(const char *encoding) {
         length++;
     }
     NSString *name = [[NSString alloc] initWithBytes:(encoding + 1) length:length encoding:NSUTF8StringEncoding];
-    
+
     return [NSString stringWithFormat:@"%@%@%@", type, name.length ? @" " : @"", name];
 }
 
 static NSString *TDFormattedStringForType(const char *encoding) {
     char type = *encoding;
-    
+
     switch (type) {
         case 'c': return @"char";
         case 'i': return @"int";
@@ -83,37 +83,37 @@ static NSString *TDFormattedStringForType(const char *encoding) {
         default:
             break;
     }
-    
+
     return @"";
 }
 
 NSString *TDFormattedStringForBlockSignature(id block) {
     struct TD_Block_literal_1 *blockRef = (__bridge struct TD_Block_literal_1 *)block;
     int flags = blockRef->flags;
-    
+
     if ((flags & TD_BLOCK_HAS_SIGNATURE) == 0) return nil;
-    
+
     struct TD_Block_descriptor_1 *descriptor = blockRef->descriptor;
-    
+
     void *signaturePtr = descriptor;
     signaturePtr += sizeof(descriptor->reserved);
     signaturePtr += sizeof(descriptor->size);
-    
+
     if (flags & TD_BLOCK_HAS_COPY_DISPOSE) {
         signaturePtr += sizeof(descriptor->copy_helper);
         signaturePtr += sizeof(descriptor->dispose_helper);
     }
-    
+
     const char *signature = *(const char **)signaturePtr;
     NSMethodSignature *methodSignature = [NSMethodSignature signatureWithObjCTypes:signature];
-    
+
     // Purposefully ignore first argument, it is a reference to the block itself
     NSMutableArray *arguments = [NSMutableArray array];
     for (int i=1; i < methodSignature.numberOfArguments; i++) {
         NSString *type = TDFormattedStringForType([methodSignature getArgumentTypeAtIndex:i]);
         [arguments addObject:type];
     }
-    
+
     NSString *returnType = TDFormattedStringForType(methodSignature.methodReturnType);
     return [NSString stringWithFormat:@"(%@ (^)(%@))", returnType, [arguments componentsJoinedByString:@", "]];
 }
