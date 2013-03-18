@@ -3,6 +3,8 @@
 BlockTypeDescription adds a block's type signature to its description.
 It makes debugging more transparent, and turns an otherwise useless description into a useful one.
 
+Because this project replaces an existing method on the private `NSBlock` class, this should be used **for debugging purposes only**.
+
 ## Example Usage
 
 ``` objective-c
