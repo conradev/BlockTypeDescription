@@ -32,3 +32,5 @@ enum {
     TD_BLOCK_HAS_STRET =         (1 << 29), // IFF TD_BLOCK_HAS_SIGNATURE
     TD_BLOCK_HAS_SIGNATURE =     (1 << 30),
 };
+
+extern NSString *TDFormattedStringForBlockSignature(id block);

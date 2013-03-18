@@ -87,7 +87,7 @@ static NSString *TDFormattedStringForType(const char *encoding) {
     return @"";
 }
 
-static NSString *TDFormattedStringForTypeOfBlock(id block) {
+NSString *TDFormattedStringForBlockSignature(id block) {
     struct TD_Block_literal_1 *blockRef = (__bridge struct TD_Block_literal_1 *)block;
     int flags = blockRef->flags;
     
@@ -119,7 +119,7 @@ static NSString *TDFormattedStringForTypeOfBlock(id block) {
 }
 
 static NSString * TDReplacedDescription(id self, SEL _cmd) {
-    NSString *blockType = TDFormattedStringForTypeOfBlock(self);
+    NSString *blockType = TDFormattedStringForBlockSignature(self);
 
     if (blockType) {
         return [NSString stringWithFormat:@"<%@: %@>", NSStringFromClass([self class]), blockType];
